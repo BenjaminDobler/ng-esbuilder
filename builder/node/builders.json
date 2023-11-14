@@ -1,0 +1,14 @@
+{
+  "builders": {
+    "build": {
+      "implementation": "./lib/build",
+      "schema": "./lib/build/schema.json",
+      "description": "build a node.js apps"
+    },
+    "serve": {
+      "implementation": "./lib/serve",
+      "schema": "./lib/serve/schema.json",
+      "description": "serve a node.js apps"
+    }
+  }
+}

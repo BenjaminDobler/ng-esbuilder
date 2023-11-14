@@ -1,0 +1,14 @@
+{
+  "builders": {
+    "build": {
+      "implementation": "./lib/build",
+      "schema": "./lib/build/schema.json",
+      "description": "package angular as electron apps"
+    },
+    "serve": {
+      "implementation": "./lib/serve",
+      "schema": "./lib/serve/schema.json",
+      "description": "package angular as electron apps"
+    }
+  }
+}

@@ -3,5 +3,129 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "electron": {
+      "root": "",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.electron:build",
+          "options": {
+            "outputPath": "dist/electron",
+            "rendererTargets": [
+              {
+                "target": "frontend:build"
+              }
+            ],
+            "mainTarget": "nodetest:build",
+            "packageJson": "projects/electron/package.json"
+          }
+        }
+      }
+    },
+    "nodetest": {
+      "projectType": "application",
+      "root": "projects/nodetest",
+      "sourceRoot": "projects/nodetest/src",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.node:build",
+          "options": {
+            "outputPath": "dist/nodetest",
+            "main": "projects/nodetest/src/index.ts"
+          }
+        },
+        "serve": {
+          "builder": "@richapps/builder.node:serve",
+          "options": {
+            "outputPath": "dist/nodetest",
+            "main": "projects/nodetest/src/index.ts"
+          }
+        }
+      }
+    },
+    "frontend": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/frontend",
+      "sourceRoot": "projects/frontend/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.custom:build",
+          "options": {
+            "outputPath": "dist/frontend",
+            "index": "projects/frontend/src/index.html",
+            "browser": "projects/frontend/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/frontend/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/frontend/src/favicon.ico",
+              "projects/frontend/src/assets"
+            ],
+            "styles": ["projects/frontend/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@richapps/builder.custom:serve",
+          "configurations": {
+            "production": {
+              "buildTarget": "frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "frontend:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "frontend:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "tsConfig": "projects/frontend/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/frontend/src/favicon.ico",
+              "projects/frontend/src/assets"
+            ],
+            "styles": ["projects/frontend/src/styles.scss"],
+            "scripts": []
+          }
+        }
+      }
+    }
   }
 }

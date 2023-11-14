@@ -1,14 +1,19 @@
 {
   "name": "esbuilder",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
+    "build": "ng build",
+    "build:builders:custom": "node ./scripts/build.js --project=custom && cd ./builder/custom && tsc",
+    "build:builders:electron": "node ./scripts/build.js --project=electron && cd ./builder/electron && tsc",
+    "build:builders:node": "node ./scripts/build.js --project=node && cd ./builder/node && tsc",
+    "build:test": "node ./scripts/build.js --project=electron",
+    "link": "node ./scripts/link.js",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "watch": "ng build --watch --configuration development"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^17.0.0",
     "@angular/common": "^17.0.0",
@@ -18,14 +23,20 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "@types/node": "^20.9.0",
+    "copy": "^0.3.2",
+    "electron": "^27.0.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^17.0.0",
     "@angular/cli": "^17.0.0",
     "@angular/compiler-cli": "^17.0.0",
     "@types/jasmine": "~5.1.0",
+    "esbuild": "^0.19.5",
+    "fs-extra": "^11.1.1",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
