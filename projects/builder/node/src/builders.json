@@ -1,0 +1,14 @@
+{
+  "builders": {
+    "build": {
+      "implementation": "./build",
+      "schema": "./build/schema.json",
+      "description": "build a node.js apps"
+    },
+    "serve": {
+      "implementation": "./serve",
+      "schema": "./serve/schema.json",
+      "description": "serve a node.js apps"
+    }
+  }
+}

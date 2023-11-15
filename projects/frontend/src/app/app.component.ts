@@ -15,7 +15,6 @@ const fs = require('fs');
 })
 export class AppComponent {
   title = 'frontend';
-  
   constructor() {
     fs.readFile('package.json', (err, data) => {
       if (err) {

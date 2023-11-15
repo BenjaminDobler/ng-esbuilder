@@ -21,6 +21,81 @@
         }
       }
     },
+    "builder.node": {
+      "projectType": "application",
+      "root": "projects/builder/node",
+      "sourceRoot": "projects/builder/node/src",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.node:build",
+          "options": {
+            "assets": [
+              "projects/builder/node/src/builders.json",
+              "projects/builder/node/src/package.json",
+              "projects/builder/node/src/build/schema.json",
+              "projects/builder/node/src/serve/schema.json"
+            ],
+            "outputPath": "dist/builder/node/",
+            "entryPoints": [
+              "projects/builder/node/src/build/index.ts",
+              "projects/builder/node/src/serve/index.ts"
+            ],
+            "libName": "@richapps/builder.node",
+            "linkToNodeModules": true
+          }
+        }
+      }
+    },
+    "builder.custom": {
+      "projectType": "application",
+      "root": "projects/builder/custom",
+      "sourceRoot": "projects/builder/custom/src",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.custom:build",
+          "options": {
+            "assets": [
+              "projects/builder/custom/src/builders.json",
+              "projects/builder/custom/src/package.json",
+              "projects/builder/custom/src/build/schema.json",
+              "projects/builder/custom/src/serve/schema.json"
+            ],
+            "outputPath": "dist/builder/custom/",
+            "entryPoints": [
+              "projects/builder/custom/src/build/index.ts",
+              "projects/builder/custom/src/serve/index.ts"
+            ],
+            "libName": "@richapps/builder.custom",
+            "linkToNodeModules": true
+          }
+        }
+      }
+    },
+    "builder.electron": {
+      "projectType": "application",
+      "root": "projects/builder/electron",
+      "sourceRoot": "projects/builder/electron/src",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.node:build",
+          "options": {
+            "assets": [
+              "projects/builder/electron/src/builders.json",
+              "projects/builder/electron/src/package.json",
+              "projects/builder/electron/src/build/schema.json",
+              "projects/builder/electron/src/serve/schema.json"
+            ],
+            "outputPath": "dist/builder/electron/",
+            "entryPoints": [
+              "projects/builder/electron/src/build/index.ts",
+              "projects/builder/electron/src/serve/index.ts"
+            ],
+            "libName": "@richapps/builder.electron",
+            "linkToNodeModules": true
+          }
+        }
+      }
+    },
     "nodetest": {
       "projectType": "application",
       "root": "projects/nodetest",
@@ -29,8 +104,12 @@
         "build": {
           "builder": "@richapps/builder.node:build",
           "options": {
+            "assets": [
+              "projects/nodetest/src/favicon.ico",
+              "projects/nodetest/src/assets"
+            ],
             "outputPath": "dist/nodetest",
-            "main": "projects/nodetest/src/index.ts"
+            "entryPoints": ["projects/nodetest/src/index.ts", "projects/nodetest/src/index2.ts", "projects/nodetest/src/folder1/index.ts"]
           }
         },
         "serve": {

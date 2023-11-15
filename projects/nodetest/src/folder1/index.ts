@@ -1,5 +1,9 @@
 import { BrowserWindow, app } from 'electron';
 
+console.log('this is the index test file hallo dsdsdsd');
+console.log('yeah hello');
+console.log('whats up');
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,

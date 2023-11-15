@@ -1,7 +1,6 @@
 import { Plugin } from "esbuild";
 
 export interface Schema {
-  main: string;
-  outputPath: string;
+  buildTarget: string;
   plugins?: Plugin[];
 }

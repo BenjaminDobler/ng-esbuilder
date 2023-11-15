@@ -9,8 +9,8 @@ console.log(process.argv);
 console.log("projectName", projectName);
 
 copy(
-  `./builder/${projectName}/src/**/*.json`,
-  `./dist/builder/${projectName}/lib`,
+  `./projects/builder/${projectName}/src/**/*.json`,
+  `./dist/builder/${projectName}/`,
   function (err, files) {
     if (err) throw err;
     // `files` is an array of the files that were copied
@@ -18,7 +18,7 @@ copy(
 );
 
 copy(
-  `./builder/${projectName}/*.json`, 
+  `./projects/builder/${projectName}/*.json`, 
   `./dist/builder/${projectName}`,
   function (err, files) {
     if (err) throw err;
