@@ -4,6 +4,11 @@
   "title": "schema",
   "type": "object",
   "properties": {
+    "watch": {
+      "type": "boolean",
+      "description": "watch mode",
+      "default": false
+    },
     "entryPoints": {
       "type": "array",
       "description": "The main file (entrypoint) of the project"

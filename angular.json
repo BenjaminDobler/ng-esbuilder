@@ -12,10 +12,10 @@
             "outputPath": "dist/electron",
             "rendererTargets": [
               {
-                "target": "frontend:build"
+                "target": "renderer:build"
               }
             ],
-            "mainTarget": "nodetest:build",
+            "mainTarget": "main:build",
             "packageJson": "projects/electron/package.json"
           }
         }
@@ -52,7 +52,7 @@
       "sourceRoot": "projects/builder/custom/src",
       "architect": {
         "build": {
-          "builder": "@richapps/builder.custom:build",
+          "builder": "@richapps/builder.node:build",
           "options": {
             "assets": [
               "projects/builder/custom/src/builders.json",
@@ -96,56 +96,56 @@
         }
       }
     },
-    "nodetest": {
+    "main": {
       "projectType": "application",
-      "root": "projects/nodetest",
-      "sourceRoot": "projects/nodetest/src",
+      "root": "projects/main",
+      "sourceRoot": "projects/main/src",
       "architect": {
         "build": {
           "builder": "@richapps/builder.node:build",
           "options": {
             "assets": [
-              "projects/nodetest/src/favicon.ico",
-              "projects/nodetest/src/assets"
+              "projects/main/src/favicon.ico",
+              "projects/main/src/assets"
             ],
-            "outputPath": "dist/nodetest",
-            "entryPoints": ["projects/nodetest/src/index.ts", "projects/nodetest/src/index2.ts", "projects/nodetest/src/folder1/index.ts"]
+            "outputPath": "dist/main",
+            "entryPoints": ["projects/main/src/index.ts", "projects/main/src/index2.ts", "projects/main/src/folder1/index.ts"]
           }
         },
         "serve": {
           "builder": "@richapps/builder.node:serve",
           "options": {
-            "outputPath": "dist/nodetest",
-            "main": "projects/nodetest/src/index.ts"
+            "outputPath": "dist/main",
+            "main": "projects/main/src/index.ts"
           }
         }
       }
     },
-    "frontend": {
+    "renderer": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "projects/frontend",
-      "sourceRoot": "projects/frontend/src",
+      "root": "projects/renderer",
+      "sourceRoot": "projects/renderer/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@richapps/builder.custom:build",
           "options": {
-            "outputPath": "dist/frontend",
-            "index": "projects/frontend/src/index.html",
-            "browser": "projects/frontend/src/main.ts",
+            "outputPath": "dist/renderer",
+            "index": "projects/renderer/src/index.html",
+            "browser": "projects/renderer/src/main.ts",
             "polyfills": ["zone.js"],
-            "tsConfig": "projects/frontend/tsconfig.app.json",
+            "tsConfig": "projects/renderer/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/frontend/src/favicon.ico",
-              "projects/frontend/src/assets"
+              "projects/renderer/src/favicon.ico",
+              "projects/renderer/src/assets"
             ],
-            "styles": ["projects/frontend/src/styles.scss"],
+            "styles": ["projects/renderer/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -176,10 +176,10 @@
           "builder": "@richapps/builder.custom:serve",
           "configurations": {
             "production": {
-              "buildTarget": "frontend:build:production"
+              "buildTarget": "renderer:build:production"
             },
             "development": {
-              "buildTarget": "frontend:build:development"
+              "buildTarget": "renderer:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -187,20 +187,20 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "frontend:build"
+            "buildTarget": "renderer:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/frontend/tsconfig.spec.json",
+            "tsConfig": "projects/renderer/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/frontend/src/favicon.ico",
-              "projects/frontend/src/assets"
+              "projects/renderer/src/favicon.ico",
+              "projects/renderer/src/assets"
             ],
-            "styles": ["projects/frontend/src/styles.scss"],
+            "styles": ["projects/renderer/src/styles.scss"],
             "scripts": []
           }
         }

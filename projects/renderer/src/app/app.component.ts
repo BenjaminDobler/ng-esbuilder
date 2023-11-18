@@ -24,4 +24,13 @@ export class AppComponent {
       console.log(data.toString());
     });
   }
+
+
+  // this function generates a uique id
+  generateId() {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  }
+
+
+  
 }

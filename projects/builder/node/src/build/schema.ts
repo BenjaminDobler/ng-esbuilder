@@ -6,6 +6,7 @@ export interface Schema {
   platform: 'browser' | 'node';
   bundle: boolean;
   plugins?: Plugin[];
+  watch: boolean;
   /**
    * List of static application assets.
    */

@@ -1,10 +1,6 @@
 import * as esbuild from 'esbuild';
 
-import {
-  createBuilder,
-  BuilderContext,
-  BuilderOutput,
-} from '@angular-devkit/architect';
+import { createBuilder, BuilderContext, BuilderOutput } from '@angular-devkit/architect';
 
 import { Schema } from './schema';
 import { resolve } from 'path';
@@ -12,10 +8,7 @@ import { resolve } from 'path';
 import type { Plugin } from 'esbuild';
 import * as cp from 'child_process';
 
-async function executeESServer(
-  options: Schema,
-  context: BuilderContext
-): Promise<BuilderOutput> {
+async function executeESServer(options: Schema, context: BuilderContext): Promise<BuilderOutput> {
   console.log('running esbuild');
 
   let child;

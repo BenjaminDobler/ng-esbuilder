@@ -21,6 +21,10 @@ export function createBuilderFunc(options: DevServerBuilderOptions, context: Bui
   //   })
   // );
 
+  console.log(options);
+  options.forceEsbuild = true;
+  options.watch = true;
+
   return executeDevServerBuilder(options, context, undefined);
 
 
