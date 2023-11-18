@@ -4,25 +4,26 @@
   "title": "schema",
   "type": "object",
   "properties": {
-    "quality": {
-      "type": "number",
-      "description": "The quality of the pictures.",
-      "default": 70
+    "watch": {
+      "description": "watch/serve mode",
+      "type": "boolean",
+      "default": false
     },
-    "max_width": {
-      "type": "number",
-      "description": "The max_width of a picture.",
-      "default": 1800
+    "outputPath": {
+      "description": "output path",
+      "type": "string"
     },
-    "folder": {
-      "type": "string",
-      "description": "The assets folder where the pictures are.",
-      "default": "./src/assets/"
+    "mainTarget": {
+      "description": "main target",
+      "type": "string"
     },
-    "extensions": {
-      "type": "string",
-      "description": "A comma separated list of picture extensions.",
-      "default": "png,jpg,jpeg"
+    "packageJson": {
+      "description": "package.json path",
+      "type": "string"
+    },
+    "rendererTargets": {
+      "description": "renderer targets",
+      "type": "array"
     },
     "additionalProperties": false
   },

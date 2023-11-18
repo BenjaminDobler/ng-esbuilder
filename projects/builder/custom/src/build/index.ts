@@ -12,7 +12,6 @@ export function createBuilderFunc(options: CustomBuilderOptions, context: Builde
   if (options.plugins) {
     plugins = [...plugins, ...options.plugins];
   }
-  options.watch = true;
   return buildApplication(options, context, plugins);
 }
 

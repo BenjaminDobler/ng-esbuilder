@@ -18,7 +18,7 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
     const progress = new Subject<esbuild.BuildResult>();
 
     const progressPlugin: esbuild.Plugin = {
-      name: 'progress-plugin',
+      name: '@richapps/builder.node:progress-plugin',
       setup(build) {
         build.onStart(() => {
           console.error('------- onStart'); // TODO: why is the log not shown
@@ -26,6 +26,9 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
         build.onEnd((result) => {
           console.log('------- onEnd'); // TODO: why is the log not shown
           progress.next(result);
+          if (!options.watch) {
+            ctx.dispose();
+          }
         });
       },
     };
@@ -48,6 +51,7 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
     if (options.watch) {
       await ctx.watch();
     } else {
+      console.log('rebuild');
       ctx.rebuild();
     }
 

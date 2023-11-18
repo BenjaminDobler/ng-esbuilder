@@ -8,4 +8,5 @@ export interface Schema {
   outputPath: string;
   mainTarget:string;
   packageJson: string;
+  watch: boolean;
 }
