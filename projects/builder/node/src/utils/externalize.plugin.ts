@@ -1,57 +1,30 @@
-export const externalizePlugin = {
-  name: 'my-esbuild-plugin',
-  setup: (build: any) => {
-    // build.initialOptions.external = ['fs', 'path', 'electron'];
-    console.log('do esbuild plugin stuff');
-    console.log(build);
+import { Plugin, PluginBuild } from 'esbuild';
 
-    // build.onLoad({ filter: /.*/ }, (args: any) => {
-    //   console.log('args ', args);
-    //   console.log(context.workspaceRoot + '/' + options.main);
+// returns a list of all build in node modules
+function getBuiltInNodeModules() {
+  const builtInModules = require('module').builtinModules;
+  return builtInModules;
+}
 
-    //   if (args.path == context.workspaceRoot + '/' + options.main) {
-    //     console.log('yes it is the same!!!');
-    //   }
-    //   // READ THE FILE args.path
-    //   return {
-    //     pluginData: args.pluginData,
-    //     contents: "console.log('hallo')",
-    //     loader: 'ts',
-    //   };
-    // });
-    build.onResolve({ filter: /.*/ }, (args: any) => {
-      // console.log('args ', args);
-      // let moduleName = args.path.split('/')[0];
-      // console.log('module name ', moduleName);
-      if (!args.path.startsWith('.')) {
-        console.log('package ', args.path);
+export function getExternalizePlugin(externals: string[] = [], externalizeBuildInNodeModules: boolean = false): Plugin {
+  return {
+    name: '@richapps:externalize-plugin',
+    setup: (build: PluginBuild) => {
+      const externalize = externals;
+      if (externalizeBuildInNodeModules) {
+        const nodeModules = getBuiltInNodeModules();
+        externalize.push(...nodeModules);
       }
-
-      if (args.path.startsWith('@angular')) {
-        console.log('package ', args.path);
-        return { path: args.path, external: true };
-      }
-
-      if (args.path === 'esbuild') {
-        console.log('package ', args.path);
-        return { path: args.path, external: true };
-      }
-
-      if (args.path === 'fs') {
-        return { path: 'fs', external: true };
-      }
-      if (args.path === 'electron') {
-        return { path: 'electron', external: true };
-      }
-      if (args.path === 'path') {
-        return { path: 'path', external: true };
-      }
-
-      /*
-          if (nodeModules.includes(moduleName)) {
-            return { path: args.path, external: true };
-          }
-          */
-    });
-  },
-};
+      let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/; // Must not start with "/" or "./" or "../"
+      build.onResolve({ filter }, (args) => {
+        if (externalize.includes(args.path)) {
+          return { external: true };
+        }
+        // TODO: this needs to be cofigurable in the builder options
+        if(args.path.startsWith('@angular')) {
+          return { external: true };
+        }
+      });
+    },
+  };
+}

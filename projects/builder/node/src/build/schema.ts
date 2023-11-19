@@ -14,6 +14,7 @@ export interface Schema {
 
   libName: string;
   linkToNodeModules: boolean;
+  externals: string[];
 }
 
 export type AssetPattern = AssetPatternClass | string;

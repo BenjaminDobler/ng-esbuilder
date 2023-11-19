@@ -5,7 +5,7 @@ import { copyFileSync } from 'fs';
 import { Observable, combineLatest, from, map, switchMap, tap } from 'rxjs';
 import { getLiveCodePlugin } from '../util/reload.plugin';
 import { ensureDirSync } from 'fs-extra';
-import { externalizePlugin } from '../util/externalize.plugin';
+import { getExternalizePlugin } from '../util/externalize.plugin';
 
 function customBuilderFunc(options: Schema, context: BuilderContext): Observable<BuilderOutput> {
   const initialize = async () => {
@@ -16,7 +16,7 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
       return context.scheduleTarget(targetFromTargetString(target.target), {
         outputPath,
         watch: options.watch,
-        plugins: [externalizePlugin as any],
+        plugins: [getExternalizePlugin(['electron'], true) as any],
       });
     });
 

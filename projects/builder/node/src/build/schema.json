@@ -13,6 +13,14 @@
       "type": "array",
       "description": "The main file (entrypoint) of the project"
     },
+    "externals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "node modules which should not be bundled"
+    },
     "outputPath": {
       "type": "string",
       "description": "output path."

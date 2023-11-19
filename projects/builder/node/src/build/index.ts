@@ -5,7 +5,7 @@ import { normalizeAssetPatterns } from '@angular-devkit/build-angular/src/utils/
 import { copyAssets } from '@angular-devkit/build-angular/src/utils/copy-assets';
 import { Schema } from './schema';
 import { resolve } from 'path';
-import { externalizePlugin } from '../utils/externalize.plugin';
+import { getExternalizePlugin } from '../utils/externalize.plugin';
 import { linkToNodeModules } from '../utils/link';
 import { Observable, Subject, from, map, switchMap } from 'rxjs';
 
@@ -13,7 +13,6 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
   console.log('running esbuild', options.plugins);
 
   const init = async () => {
-    
     const entryPoints = options.entryPoints.map((entryPoint) => resolve(context.workspaceRoot, entryPoint));
     const progress = new Subject<esbuild.BuildResult>();
 
@@ -21,10 +20,10 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
       name: '@richapps/builder.node:progress-plugin',
       setup(build) {
         build.onStart(() => {
-          console.error('------- onStart'); // TODO: why is the log not shown
+          console.log('------- onStart');
         });
         build.onEnd((result) => {
-          console.log('------- onEnd'); // TODO: why is the log not shown
+          console.log('------- onEnd');
           progress.next(result);
           if (!options.watch) {
             ctx.dispose();
@@ -33,7 +32,7 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
       },
     };
 
-    let plugins: esbuild.Plugin[] = [externalizePlugin, progressPlugin];
+    let plugins: esbuild.Plugin[] = [getExternalizePlugin(options.externals), progressPlugin];
     if (options.plugins) {
       plugins = [...plugins, ...options.plugins];
     }

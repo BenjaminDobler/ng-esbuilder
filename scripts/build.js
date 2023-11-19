@@ -5,9 +5,6 @@ const projectName = process.argv[2].split("=")[1];
 
 fs.removeSync(`./dist/builder.${projectName}`);
 
-console.log(process.argv);
-console.log("projectName", projectName);
-
 copy(
   `./projects/builder/${projectName}/src/**/*.json`,
   `./dist/builder/${projectName}/`,
@@ -18,7 +15,7 @@ copy(
 );
 
 copy(
-  `./projects/builder/${projectName}/*.json`, 
+  `./projects/builder/${projectName}/*.json`,
   `./dist/builder/${projectName}`,
   function (err, files) {
     if (err) throw err;
@@ -27,21 +24,18 @@ copy(
 );
 
 function linkToNodeModules(fromPath, toPath) {
-    const parentToDir = path.dirname(toPath);
-    console.log('parentToDir', parentToDir);
-    fs.ensureDirSync(parentToDir);
-    console.log('yup');
-    const doesExist = fs.existsSync(toPath);
-    console.log('doesExist', doesExist);
+  const parentToDir = path.dirname(toPath);
+  fs.ensureDirSync(parentToDir);
+  const doesExist = fs.existsSync(toPath);
 
-    if (fs.existsSync(path.resolve(fromPath)) && !doesExist) {
-      try {
-        fs.symlinkSync(path.resolve(fromPath), path.resolve(toPath), "junction");
-      } catch (e) {
-        console.log(e);
-      }
+  if (fs.existsSync(path.resolve(fromPath)) && !doesExist) {
+    try {
+      fs.symlinkSync(path.resolve(fromPath), path.resolve(toPath), "junction");
+    } catch (e) {
+      console.log(e);
     }
   }
+}
 
 try {
   linkToNodeModules(
