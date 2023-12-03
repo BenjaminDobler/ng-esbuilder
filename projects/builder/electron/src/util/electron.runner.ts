@@ -39,7 +39,10 @@ export class ElectronRunner {
 
   reloadWindows() {
     if (this.electronProcess) {
+      console.log('send reload to electron process');
       this.electronProcess.send('@richapps/builder.electron:ipc:reload');
+    } else {
+      console.log('no electron process running');
     }
   }
 }

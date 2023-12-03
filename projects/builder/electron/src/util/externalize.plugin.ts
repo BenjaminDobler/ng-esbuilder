@@ -1,7 +1,7 @@
 import { Plugin, PluginBuild } from 'esbuild';
 
 // returns a list of all build in node modules
-function getBuiltInNodeModules() {
+export function getBuiltInNodeModules() {
   const builtInModules = require('module').builtinModules;
   return builtInModules;
 }

@@ -18,6 +18,12 @@ export function getExternalizePlugin(externals: string[] = [], externalizeBuildI
       let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/; // Must not start with "/" or "./" or "../"
       build.onResolve({ filter }, (args) => {
         if (externalize.includes(args.path)) {
+          console.log('externalize frontend ', args.path);
+          console.log(args);
+          return { external: true };
+        }
+        // TODO: this needs to be cofigurable in the builder options
+        if(args.path.startsWith('@angular-devkit') || args.path.startsWith('@angular/cli')) {
           return { external: true };
         }
       });

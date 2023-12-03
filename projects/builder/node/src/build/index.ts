@@ -7,14 +7,14 @@ import { Schema } from './schema';
 import { resolve } from 'path';
 import { getExternalizePlugin } from '../utils/externalize.plugin';
 import { linkToNodeModules } from '../utils/link';
-import { Observable, Subject, from, map, switchMap } from 'rxjs';
+import { Observable, ReplaySubject, from, map, switchMap, tap } from 'rxjs';
 
 function customBuilderFunc(options: Schema, context: BuilderContext): Observable<BuilderOutput> {
-  console.log('running esbuild', options.plugins);
 
   const init = async () => {
     const entryPoints = options.entryPoints.map((entryPoint) => resolve(context.workspaceRoot, entryPoint));
-    const progress = new Subject<esbuild.BuildResult>();
+    const progress = new ReplaySubject<esbuild.BuildResult>(1);
+  
 
     const progressPlugin: esbuild.Plugin = {
       name: '@richapps/builder.node:progress-plugin',
@@ -50,7 +50,6 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
     if (options.watch) {
       await ctx.watch();
     } else {
-      console.log('rebuild');
       ctx.rebuild();
     }
 
@@ -79,7 +78,7 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
     switchMap((progress) => progress),
     map((result) => {
       return {
-        success: true,
+        success: result.errors.length === 0,
       };
     })
   );

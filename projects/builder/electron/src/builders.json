@@ -1,8 +1,13 @@
 {
     "builders": {
       "build": {
-        "implementation": "./build",
+        "implementation": "./build/index.js",
         "schema": "./build/schema.json",
+        "description": "build angular as electron apps"
+      },
+      "package": {
+        "implementation": "./package/index.js",
+        "schema": "./package/schema.json",
         "description": "package angular as electron apps"
       }
     }

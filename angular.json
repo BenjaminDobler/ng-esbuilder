@@ -18,6 +18,45 @@
             "mainTarget": "main:build",
             "packageJson": "projects/electron/package.json"
           }
+        },
+        "package": {
+          "builder": "@richapps/builder.electron:package",
+          "options": {
+            "buildTarget": "electron:build",
+            "reinstallNodeModules": true,
+            "targets": {
+              "mac": ["zip:x64", "zip:arm64"],
+              "win": ["zip:x64"],
+              "linux": ["tar.gz:x64"]
+            },
+            "config": {
+              "mac": {
+                "category": "public.app-category.developer-tools",
+                "type": "development",
+                "hardenedRuntime": true,
+                "gatekeeperAssess": false
+              },
+              "artifactName": "${productName}-${os}-${arch}.${ext}",
+              "appId": "@richapps/apps:electron",
+              "productName": "Electron Test App",
+              "copyright": "@richapps",
+              "npmRebuild": true,
+              "asar": false,
+              "directories": {
+                "app": "dist/electron/",
+                "buildResources": "projects/electron/resources",
+                "output": "dist/electron-package"
+              },
+              "files": ["**/*"],
+              "fileAssociations": [
+                {
+                  "ext": ["myext"],
+                  "name": "Some file association",
+                  "role": "Editor"
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -67,7 +106,8 @@
             ],
             "libName": "@richapps/builder.custom",
             "linkToNodeModules": true,
-            "platform": "node"
+            "platform": "node",
+            "externals": ["@angular-devkit/build-angular", "@angular/cli"]
           }
         }
       }
@@ -84,15 +124,24 @@
               "projects/builder/electron/src/builders.json",
               "projects/builder/electron/src/package.json",
               "projects/builder/electron/src/build/schema.json",
-              "projects/builder/electron/src/serve/schema.json"
+              "projects/builder/electron/src/serve/schema.json",
+              "projects/builder/electron/src/package/schema.json"
             ],
             "outputPath": "dist/builder/electron/",
             "entryPoints": [
               "projects/builder/electron/src/build/index.ts",
-              "projects/builder/electron/src/serve/index.ts"
+              "projects/builder/electron/src/serve/index.ts",
+              "projects/builder/electron/src/package/index.ts"
             ],
             "libName": "@richapps/builder.electron",
-            "linkToNodeModules": true
+            "linkToNodeModules": true,
+            "externals": [
+              "electron-builder",
+              "electron",
+              "@angular-devkit/build-angular",
+              "@angular/cli",
+              "@angular-devkit/core"
+            ]
           }
         }
       }
@@ -105,12 +154,17 @@
         "build": {
           "builder": "@richapps/builder.node:build",
           "options": {
+            "externals": ["electron"],
             "assets": [
               "projects/main/src/favicon.ico",
               "projects/main/src/assets"
             ],
             "outputPath": "dist/main",
-            "entryPoints": ["projects/main/src/index.ts", "projects/main/src/index2.ts", "projects/main/src/folder1/index.ts"]
+            "entryPoints": [
+              "projects/main/src/index.ts",
+              "projects/main/src/index2.ts",
+              "projects/main/src/folder1/index.ts"
+            ]
           }
         },
         "serve": {
@@ -134,7 +188,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@richapps/builder.custom:build",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/renderer",
             "index": "projects/renderer/src/index.html",

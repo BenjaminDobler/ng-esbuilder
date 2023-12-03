@@ -6,7 +6,9 @@ const codeTemplate = (identifier: string) => {
   return `
 const electron = require('electron');
 process.on('message', (message) => {
+  console.log('message from child ', message);
     if (message == '${identifier}:reload') {
+      console.log('reload windows');
       for (const window of electron.BrowserWindow.getAllWindows()) { 
         let u = new URL(window.webContents.getURL());
 
