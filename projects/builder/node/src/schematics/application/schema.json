@@ -21,7 +21,7 @@
         "main": {
             "description": "Specifies how the code is compiled and bundled.",
             "type": "string",
-            "default": "src/index.ts"
+            "default": "index.ts"
         }
     },
     "required": ["name"]

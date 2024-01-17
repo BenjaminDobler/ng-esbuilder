@@ -35,14 +35,14 @@ function addProject(options: ApplicationOptions, appDir: string, folderName: str
           externals: ['electron'],
           assets: [],
           outputPath: `dist/${folderName}`,
-          entryPoints: [`${sourceRoot}/main.ts`],
+          entryPoints: [`${sourceRoot}/${options.main}`],
         },
       },
       serve: {
         builder: '@richapps/builder.node:serve',
         options: {
-          outputPath: 'dist/main',
-          main: 'projects/main/src/index.ts',
+          outputPath: `dist/${folderName}`,
+          main: '`${sourceRoot}/${options.main}`',
         },
       },
     },
