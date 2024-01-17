@@ -23,6 +23,15 @@ copy(
   }
 );
 
+copy(
+  `./projects/builder/${projectName}/src/schematics/**/files/**/*`,
+  `./dist/builder/${projectName}/schematics/`,
+  function (err, files) {
+    if (err) throw err;
+    // `files` is an array of the files that were copied
+  }
+);
+
 function linkToNodeModules(fromPath, toPath) {
   const parentToDir = path.dirname(toPath);
   fs.ensureDirSync(parentToDir);

@@ -7,5 +7,6 @@
     "lib/*",
     "builders.json"
   ],
-  "builders": "builders.json"
+  "builders": "builders.json",
+  "schematics": "./schematics/collection.json"
 }

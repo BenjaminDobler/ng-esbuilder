@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "SchematicsNodeApp",
+    "title": "Node Application Options Schema",
+    "type": "object",
+    "description": "Generates a new typescript node app in the newProjectRoot folder of the workspace.",
+    "properties": {
+        "projectRoot": {
+            "description": "project root where the application should be installed",
+            "type": "string"
+        },
+        "name": {
+            "description": "The name of the new app.",
+            "type": "string",
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            },
+            "x-prompt": "What name would you like to use for the application?"
+        },
+        "main": {
+            "description": "Specifies how the code is compiled and bundled.",
+            "type": "string",
+            "default": "src/index.ts"
+        }
+    },
+    "required": ["name"]
+}
