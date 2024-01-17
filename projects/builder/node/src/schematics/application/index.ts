@@ -42,7 +42,7 @@ function addProject(options: ApplicationOptions, appDir: string, folderName: str
         builder: '@richapps/builder.node:serve',
         options: {
           outputPath: `dist/${folderName}`,
-          main: '`${sourceRoot}/${options.main}`',
+          main: `${sourceRoot}/${options.main}`,
         },
       },
     },
