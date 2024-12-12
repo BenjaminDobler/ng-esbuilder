@@ -25,8 +25,6 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
     const rendererTargetOptions = await Promise.all(rendererTargets.map((target) => context.getTargetOptions(targetFromTargetString(target.target))));
     
     const runs = rendererTargets.map((target, i) => {
-      console.log('remder target');
-      console.log(target);
       const rendererTarget = targetFromTargetString(target.target); // TODO: get target string from options
       const rendererOptions = rendererTargetOptions[i];
       let externalDependencies = rendererOptions.externalDependencies as string[] || [];

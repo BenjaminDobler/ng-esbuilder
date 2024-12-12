@@ -11,11 +11,15 @@ process.on('message', (message) => {
       console.log('reload windows');
       for (const window of electron.BrowserWindow.getAllWindows()) { 
         let u = new URL(window.webContents.getURL());
-
         if (u.pathname.includes('.html')) {
           window.webContents.reloadIgnoringCache();
         } else {
-           window.loadURL('file://' + u.pathname + 'index.html' + u.hash);
+          if (u.protocol == 'file:') {
+            window.loadURL('file://' + u.pathname + 'index.html' + u.hash);
+          } else {
+            const reloadURL = u.origin + '/index.html' + u.hash;
+            window.loadURL(reloadURL);
+          }
         }
       };
     }

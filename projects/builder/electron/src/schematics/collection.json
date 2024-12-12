@@ -1,0 +1,11 @@
+{
+    "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics": {
+        "application": {
+            "aliases": ["app"],
+            "factory": "./application",
+            "schema": "./application/schema.json",
+            "description": "Create a Node application project that uses typescript."
+        }
+    }
+}

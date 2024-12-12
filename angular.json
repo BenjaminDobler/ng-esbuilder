@@ -170,8 +170,7 @@
         "serve": {
           "builder": "@richapps/builder.node:serve",
           "options": {
-            "outputPath": "dist/main",
-            "main": "projects/main/src/index.ts"
+            "buildTarget": "main:build"
           }
         }
       }
@@ -260,6 +259,32 @@
           }
         }
       }
+    },
+    "nodetest": {
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.node:build",
+          "options": {
+            "externals": [
+              "electron"
+            ],
+            "assets": [],
+            "outputPath": "dist/nodetest",
+            "entryPoints": [
+              "projects/nodetest/src/index.ts"
+            ]
+          }
+        },
+        "serve": {
+          "builder": "@richapps/builder.node:serve",
+          "options": {
+            "buildTarget": "nodetest:build"
+          }
+        }
+      },
+      "root": "projects/nodetest/",
+      "sourceRoot": "projects/nodetest/src"
     }
   }
 }
