@@ -1,4 +1,4 @@
-import { apply, chain, mergeWith, move, MergeStrategy, Rule, SchematicContext, SchematicsException, template, Tree, url, strings } from '@angular-devkit/schematics';
+import { apply, chain, mergeWith, move, MergeStrategy, Rule, SchematicContext, SchematicsException, template, Tree, url, strings, externalSchematic } from '@angular-devkit/schematics';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
 
 import { JsonObject } from '@angular-devkit/core';
@@ -13,7 +13,23 @@ export interface ApplicationOptions extends JsonObject {
 export default function (options: ApplicationOptions): Rule {
   return async (host: Tree, context: SchematicContext) => {
     const { appDir, appRootSelector, folderName, sourceDir } = await getAppOptions(host, options);
-    return chain([addProject(options, appDir, folderName), mergeWith(apply(url('./files/'), [move(appDir)]), MergeStrategy.Overwrite)]);
+
+
+    const rendererRule = externalSchematic('@schematics/angular', 'application', {
+      name: options.name + '.renderer',
+      projectRoot: appDir + '/renderer'
+    });
+
+    const mainRule = externalSchematic('@richapps/builder.node', 'application', {
+      name: options.name + '.main',
+      projectRoot: appDir + '/main'
+    });
+
+    return chain([
+      rendererRule,
+      mainRule,
+      addProject(options, appDir, folderName),
+      mergeWith(apply(url('./files/'), [move(appDir)]), MergeStrategy.Overwrite)]);
   };
 }
 
@@ -30,20 +46,85 @@ function addProject(options: ApplicationOptions, appDir: string, folderName: str
     sourceRoot,
     architect: {
       build: {
-        builder: '@richapps/builder.node:build',
+        builder: "@richapps/builder.electron:build",
         options: {
-          externals: ['electron'],
-          assets: [],
-          outputPath: `dist/${folderName}`,
-          entryPoints: [`${sourceRoot}/${options.main}`],
-        },
+          outputPath: "dist/my.electron.app",
+          rendererTargets: [
+            {
+              target: `${options.name}.renderer:build`
+            }
+          ],
+          "mainTarget": `${options.name}.main:build`,
+          "packageJson": appDir + "/package.json"
+        }
       },
-      serve: {
-        builder: '@richapps/builder.node:serve',
-        options: {
-          buildTarget: `${options.name}:build`,
-        },
+      "package": {
+        "builder": "@richapps/builder.electron:package",
+        "options": {
+          "buildTarget": "electron:build",
+          "reinstallNodeModules": true,
+          "targets": {
+            "mac": [
+              "zip:x64",
+              "zip:arm64"
+            ],
+            "win": [
+              "zip:x64"
+            ],
+            "linux": [
+              "tar.gz:x64"
+            ]
+          },
+          "config": {
+            "mac": {
+              "category": "public.app-category.developer-tools",
+              "type": "development",
+              "hardenedRuntime": true,
+              "gatekeeperAssess": false
+            },
+            "artifactName": "${productName}-${os}-${arch}.${ext}",
+            "appId": "@richapps/apps:electron",
+            "productName": "My Electron App",
+            "copyright": "@richapps",
+            "npmRebuild": true,
+            "asar": false,
+            "directories": {
+              "app": "dist/electron/",
+              "buildResources": "projects/demo/my.electron.app/resources",
+              "output": "dist/my.electron.app"
+            },
+            "files": [
+              "**/*"
+            ],
+            "fileAssociations": [
+              {
+                "ext": [
+                  "myext"
+                ],
+                "name": "Some file association",
+                "role": "Editor"
+              }
+            ]
+          }
+        }
       },
+
+
+      // build: {
+      //   builder: '@richapps/builder.node:build',
+      //   options: {
+      //     externals: ['electron'],
+      //     assets: [],
+      //     outputPath: `dist/${folderName}`,
+      //     entryPoints: [`${sourceRoot}/${options.main}`],
+      //   },
+      // },
+      // serve: {
+      //   builder: '@richapps/builder.node:serve',
+      //   options: {
+      //     buildTarget: `${options.name}:build`,
+      //   },
+      // },
     },
   };
   return updateWorkspace((workspace) => {

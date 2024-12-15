@@ -1,0 +1,9 @@
+{
+    "angular-schematics.schematicsDefaultOptions": {
+        "angular-*": {
+            "style": "scss",
+            "externalTemplate": true,
+            "selectorPrefix": ""
+        }
+    }
+}
