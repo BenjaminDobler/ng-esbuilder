@@ -25,9 +25,16 @@
             "buildTarget": "electron:build",
             "reinstallNodeModules": true,
             "targets": {
-              "mac": ["zip:x64", "zip:arm64"],
-              "win": ["zip:x64"],
-              "linux": ["tar.gz:x64"]
+              "mac": [
+                "zip:x64",
+                "zip:arm64"
+              ],
+              "win": [
+                "zip:x64"
+              ],
+              "linux": [
+                "tar.gz:x64"
+              ]
             },
             "config": {
               "mac": {
@@ -47,10 +54,14 @@
                 "buildResources": "projects/electron/resources",
                 "output": "dist/electron-package"
               },
-              "files": ["**/*"],
+              "files": [
+                "**/*"
+              ],
               "fileAssociations": [
                 {
-                  "ext": ["myext"],
+                  "ext": [
+                    "myext"
+                  ],
                   "name": "Some file association",
                   "role": "Editor"
                 }
@@ -107,7 +118,10 @@
             "libName": "@richapps/builder.custom",
             "linkToNodeModules": true,
             "platform": "node",
-            "externals": ["@angular-devkit/build-angular", "@angular/cli"]
+            "externals": [
+              "@angular-devkit/build-angular",
+              "@angular/cli"
+            ]
           }
         }
       }
@@ -154,7 +168,9 @@
         "build": {
           "builder": "@richapps/builder.node:build",
           "options": {
-            "externals": ["electron"],
+            "externals": [
+              "electron"
+            ],
             "assets": [
               "projects/main/src/favicon.ico",
               "projects/main/src/assets"
@@ -192,14 +208,18 @@
             "outputPath": "dist/renderer",
             "index": "projects/renderer/src/index.html",
             "browser": "projects/renderer/src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "projects/renderer/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/renderer/src/favicon.ico",
               "projects/renderer/src/assets"
             ],
-            "styles": ["projects/renderer/src/styles.scss"],
+            "styles": [
+              "projects/renderer/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -247,14 +267,19 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "projects/renderer/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/renderer/src/favicon.ico",
               "projects/renderer/src/assets"
             ],
-            "styles": ["projects/renderer/src/styles.scss"],
+            "styles": [
+              "projects/renderer/src/styles.scss"
+            ],
             "scripts": []
           }
         }
@@ -285,6 +310,179 @@
       },
       "root": "projects/nodetest/",
       "sourceRoot": "projects/nodetest/src"
+    },
+    "my.electron.app": {
+      "projectType": "application",
+      "root": "projects/demo/my.electron.app",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.electron:build",
+          "options": {
+            "outputPath": "dist/my.electron.app",
+            "rendererTargets": [
+              {
+                "target": "my.electron.app.renderer:build"
+              }
+            ],
+            "mainTarget": "my.electron.app.main:build",
+            "packageJson": "projects/demo/my.electron.app/package.json"
+          }
+        },
+        "package": {
+          "builder": "@richapps/builder.electron:package",
+          "options": {
+            "buildTarget": "electron:build",
+            "reinstallNodeModules": true,
+            "targets": {
+              "mac": [
+                "zip:x64",
+                "zip:arm64"
+              ],
+              "win": [
+                "zip:x64"
+              ],
+              "linux": [
+                "tar.gz:x64"
+              ]
+            },
+            "config": {
+              "mac": {
+                "category": "public.app-category.developer-tools",
+                "type": "development",
+                "hardenedRuntime": true,
+                "gatekeeperAssess": false
+              },
+              "artifactName": "${productName}-${os}-${arch}.${ext}",
+              "appId": "@richapps/apps:electron",
+              "productName": "My Electron App",
+              "copyright": "@richapps",
+              "npmRebuild": true,
+              "asar": false,
+              "directories": {
+                "app": "dist/electron/",
+                "buildResources": "projects/demo/my.electron.app/resources",
+                "output": "dist/my.electron.app"
+              },
+              "files": [
+                "**/*"
+              ],
+              "fileAssociations": [
+                {
+                  "ext": [
+                    "myext"
+                  ],
+                  "name": "Some file association",
+                  "role": "Editor"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "my.electron.app.main": {
+      "projectType": "application",
+      "root": "projects/demo/my.electron.app/main",
+      "sourceRoot": "projects/demo/my.electron.app/main/src",
+      "architect": {
+        "build": {
+          "builder": "@richapps/builder.node:build",
+          "options": {
+            "externals": [
+              "electron"
+            ],
+            "outputPath": "dist/my.electron.app/main",
+            "entryPoints": [
+              "projects/demo/my.electron.app/main/src/index.ts"
+            ]
+          }
+        },
+        "serve": {
+          "builder": "@richapps/builder.node:serve",
+          "options": {
+            "buildTarget": "my.electron.app.main:build"
+          }
+        }
+      }
+    },
+    "my.electron.app.renderer": {
+      "projectType": "application",
+      "root": "projects/demo/my.electron.app/renderer",
+      "sourceRoot": "projects/demo/my.electron.app/renderer/src",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/my.electron.app/renderer",
+            "index": "projects/demo/my.electron.app/renderer/src/index.html",
+            "browser": "projects/demo/my.electron.app/renderer/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/demo/my.electron.app/renderer/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/demo/my.electron.app/renderer/src/favicon.ico",
+              "projects/demo/my.electron.app/renderer/src/assets"
+            ],
+            "styles": [
+              "projects/demo/my.electron.app/renderer/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@richapps/builder.custom:serve",
+          "configurations": {
+            "production": {
+              "buildTarget": "my.electron.app.renderer:build:production"
+            },
+            "development": {
+              "buildTarget": "my.electron.app.renderer:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "my.electron.app.renderer:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/demo/my.electron.app/renderer/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/demo/my.electron.app/renderer/src/favicon.ico",
+              "projects/demo/my.electron.app/renderer/src/assets"
+            ],
+            "styles": [
+              "projects/demo/my.electron.app/renderer/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
