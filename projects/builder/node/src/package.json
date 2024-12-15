@@ -1,6 +1,6 @@
 {
   "name": "@richapps/builder.node",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "node esbuild builder",
   "main": "lib/index.js",
   "builders": "builders.json",
