@@ -17,7 +17,8 @@ export default function (options: ApplicationOptions): Rule {
 
     const rendererRule = externalSchematic('@schematics/angular', 'application', {
       name: options.name + '.renderer',
-      projectRoot: appDir + '/renderer'
+      projectRoot: appDir + '/renderer',
+      ssr: false
     });
 
     const mainRule = externalSchematic('@richapps/builder.node', 'application', {
@@ -25,9 +26,43 @@ export default function (options: ApplicationOptions): Rule {
       projectRoot: appDir + '/main'
     });
 
+
+    const updateMainIndex = (options: any) => {
+      return (tree: Tree, _context: SchematicContext) => {
+        const content: Buffer | null = tree.read(appDir + '/main/src/index.ts');
+        tree.getDir('/').subdirs.forEach((s) => {
+          console.log(s);
+        });
+        console.log(content);
+        const updatedContent = `
+import { BrowserWindow, app } from 'electron';
+
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: { nodeIntegration: true, contextIsolation: false },
+  });
+  win.loadFile('renderer/${options.name}.renderer/browser/index.html');
+};
+
+app.whenReady().then(() => {
+  createWindow();
+});
+
+        `;
+
+
+
+        tree.overwrite(appDir + '/main/src/index.ts', updatedContent);
+        return tree;
+      };
+    }
+
     return chain([
       rendererRule,
       mainRule,
+      updateMainIndex(options),
       addProject(options, appDir, folderName),
       mergeWith(apply(url('./files/'), [move(appDir)]), MergeStrategy.Overwrite)]);
   };
@@ -48,7 +83,7 @@ function addProject(options: ApplicationOptions, appDir: string, folderName: str
       build: {
         builder: "@richapps/builder.electron:build",
         options: {
-          outputPath: "dist/my.electron.app",
+          outputPath: "dist/" + options.name,
           rendererTargets: [
             {
               target: `${options.name}.renderer:build`
@@ -59,19 +94,19 @@ function addProject(options: ApplicationOptions, appDir: string, folderName: str
         }
       },
       "package": {
-        "builder": "@richapps/builder.electron:package",
-        "options": {
-          "buildTarget": "electron:build",
-          "reinstallNodeModules": true,
-          "targets": {
-            "mac": [
+        builder: "@richapps/builder.electron:package",
+        options: {
+          buildTarget: "electron:build",
+          reinstallNodeModules: true,
+          targets: {
+            mac: [
               "zip:x64",
               "zip:arm64"
             ],
-            "win": [
+            win: [
               "zip:x64"
             ],
-            "linux": [
+            linux: [
               "tar.gz:x64"
             ]
           },
@@ -82,21 +117,21 @@ function addProject(options: ApplicationOptions, appDir: string, folderName: str
               "hardenedRuntime": true,
               "gatekeeperAssess": false
             },
-            "artifactName": "${productName}-${os}-${arch}.${ext}",
-            "appId": "@richapps/apps:electron",
-            "productName": "My Electron App",
-            "copyright": "@richapps",
-            "npmRebuild": true,
-            "asar": false,
-            "directories": {
-              "app": "dist/electron/",
-              "buildResources": "projects/demo/my.electron.app/resources",
-              "output": "dist/my.electron.app"
+            artifactName: "${productName}-${os}-${arch}.${ext}",
+            appId: "@richapps/apps:electron",
+            productName: options.name,
+            copyright: "@richapps",
+            npmRebuild: true,
+            asar: false,
+            directories: {
+              app: "dist/electron/",
+              buildResources: appDir + "/resources",
+              output: "dist/" + options.name
             },
-            "files": [
+            files: [
               "**/*"
             ],
-            "fileAssociations": [
+            fileAssociations: [
               {
                 "ext": [
                   "myext"
@@ -108,23 +143,6 @@ function addProject(options: ApplicationOptions, appDir: string, folderName: str
           }
         }
       },
-
-
-      // build: {
-      //   builder: '@richapps/builder.node:build',
-      //   options: {
-      //     externals: ['electron'],
-      //     assets: [],
-      //     outputPath: `dist/${folderName}`,
-      //     entryPoints: [`${sourceRoot}/${options.main}`],
-      //   },
-      // },
-      // serve: {
-      //   builder: '@richapps/builder.node:serve',
-      //   options: {
-      //     buildTarget: `${options.name}:build`,
-      //   },
-      // },
     },
   };
   return updateWorkspace((workspace) => {

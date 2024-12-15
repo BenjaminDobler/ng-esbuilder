@@ -35,6 +35,7 @@ function customBuilderFunc(options: Schema, context: BuilderContext): Observable
         outputPath,
         watch: options.watch,
         externalDependencies,
+        baseHref: './'
       });
     });
 
